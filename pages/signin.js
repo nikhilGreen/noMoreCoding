@@ -6,6 +6,8 @@ import { signIn, signOut, useSession } from 'next-auth/client'
 import { loginType } from "../components/global";
 import { useRouter } from 'next/router'
 import { parseCookies, destroyCookie } from 'nookies';
+import { login_details, clearLoginData } from "../redux/actions/userActions";
+import { useSelector, useDispatch } from "react-redux";
 import $ from "jquery";
 
 export default function signin(props) {
@@ -19,6 +21,7 @@ export default function signin(props) {
     });
     console.log('props signin',props);
     const router = useRouter()
+    const dispatch = useDispatch();
     useEffect(() => {
         
         try {
@@ -29,6 +32,7 @@ export default function signin(props) {
                 let lastName = session.user.name.split(' ').slice(-1).join(' ');
                 let userdata = { email: session.user.email, firstName: firstName, lastName: lastName, profileImage: session.user.image, loginType: loginType.socialSite };
                 
+
                 fetch(`/api/auth/login`, {
                     method: 'POST',
                     headers: {
@@ -127,26 +131,8 @@ export default function signin(props) {
                 email: login.email,
                 password: login.password
             }
-            fetch(`/api/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userdata)
-            })
-                .then(res => res.json())
-                .then(res2 => {
-                    if (res2.success) {
-                        document.cookie = `tokenTest=${res2.token};max-age=` + 60 * 60 * 5;
-                        console.log(res2)
-                        router.replace('/')
-                    } else {
-                        console.log("no response")
-                        console.log(res2)
-                        swal(`${res2.message}`, `${login.email}`, "warning");
-                    }
-                }
-                )
+            dispatch(login_details({ email: login.email, password:login.password }));
+         
         }
     }
 

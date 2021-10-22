@@ -13,7 +13,7 @@ export default function dashboard() {
                                 <div className="card-body">
                                     <h5 className="card-title">Send Email</h5>
                                     <p className="card-text">Send email securely.</p>
-                                    <Link href={"/"} >
+                                    <Link href={"/sendEmail"} >
                                         <a className="btn btn-success">Activate</a>
                                     </Link>
 

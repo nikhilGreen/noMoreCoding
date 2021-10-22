@@ -13,8 +13,11 @@ export default function Home(props) {
   useEffect(() => {
     if($.isEmptyObject(props)) {
       router.replace('/signin')
+    }else{
+      router.replace('/')
     }
   },[])
+
 
   const logoutHandle=() => {
     signOut()
@@ -23,7 +26,7 @@ export default function Home(props) {
   }
   var token=null;
   if(props) {
-    token=props.tokenTest
+    token=props.token
   } else {
     console.log('props is empty');
   }
@@ -42,9 +45,9 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps(ctx) {
-  var { tokenTest }=parseCookies(ctx)
-  if(tokenTest&&tokenTest!=undefined) {
-    return { props: { tokenTest } }
+  var { token }=parseCookies(ctx)
+  if(token&&token!=undefined) {
+    return { props: { token } }
   } else {
     return { props: {} }
   }
